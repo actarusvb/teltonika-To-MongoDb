@@ -1,39 +1,28 @@
 
 const net = require('net');
 const conf = require('./conf.json');
-// it cotain some info like
-// {
-//    "port": 5000
-//}
 const Parser = require('teltonika-parser-ex');
 const binutils = require('binutils64');
 const {MongoClient} = require('mongodb');
 require ( "dotenv").config();
 
 console.log(process.versions);
+const url = process.env.OFFICETRAKER || "mongodb://localhost:27017";
 
-var _db;
-const url = process.env.TRAKER || "mongodb://localhost:27017";
-// this env is load by .env file that contain
-// TRAKER=mongodb://user:pssword@192.168.0.13:27017/?authMechanism=SCRAM-SHA-256&authSource=sensorRaw
-// mongoDbName=sensorRaw
-
-async function main() {
-	try {
-	console.log("connect to db for collection %s",conf.mongoCollectionRaw);
 function connectMongo(){	
 	const client = new MongoClient(url, { useUnifiedTopology: true });
 	
 	client.connect();
 	return client.db(process.env.mongoDbName);
 }
+async function main() {
+	try {
+
+	console.log("connect to db for collection %s",conf.mongoCollectionRaw);
 
 	const dbn = await connectMongo();
-
-	// var dbn = _db;
 	var col=dbn.collection(conf.mongoCollectionRaw);
-	console.log("Col xxx ",col);
-
+	console.log("Col %s %o",conf.mongoCollectionRaw,col);
 
 	const server = net.createServer(function (socket) {
 		console.log('client connected')
@@ -88,7 +77,7 @@ function connectMongo(){
 	}catch (err) {
 		console.log(err);
 	} finally {
-		// _	db.close();
+		// dbn.close();
 	}
 }
 
