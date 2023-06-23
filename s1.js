@@ -7,7 +7,10 @@ const {MongoClient} = require('mongodb');
 require ( "dotenv").config();
 
 console.log(process.versions);
-const url = process.env.OFFICETRAKER || "mongodb://localhost:27017";
+const url = process.env.TRAKER || "mongodb://localhost:27017";
+// use data in env, it is like
+// TRAKER=mongodb://user:passwd@192.168.00.13:27017/?authMechanism=SCRAM-SHA-256&authSource=sensorRaw
+
 
 function connectMongo(){	
 	const client = new MongoClient(url, { useUnifiedTopology: true });
